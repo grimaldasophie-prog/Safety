@@ -1,0 +1,742 @@
+<title>Anchor Safety Bracelet</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Anchor is a standalone safety bracelet that alerts a woman's trusted circle when she can't. Investor overview.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Italiana&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: night-out narrative. Dark ink "after hours" ground, brushed-silver type,
+   one amber signal (the bracelet's flush indicator dot) used only for live state. */
+:root {
+  --ink: #0d1019;          /* page ground */
+  --ink-2: #151a27;        /* raised surface */
+  --line: #262d3f;         /* hairlines */
+  --silver: #e4e6ec;       /* primary text */
+  --mute: #959cb0;         /* secondary text */
+  --signal: #f2b45a;       /* indicator dot / accent */
+  --signal-ink: #1a1206;   /* text on signal */
+  --ok: #7fcfa4;
+  --alert: #ff7a6b;
+  --metal-a: #f4f5f8; --metal-b: #a7acb8; --metal-c: #6d7383;
+  --display: "Italiana", "Didot", "Bodoni 72", Georgia, serif;
+  --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --ink: #eef0f4; --ink-2: #ffffff; --line: #d5d9e2; --silver: #141826; --mute: #596075;
+    --signal: #b46c12; --signal-ink: #ffffff; --ok: #1f7a4d; --alert: #c23a2b;
+    --metal-a: #ffffff; --metal-b: #b9bdc8; --metal-c: #7a8090;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --ink: #eef0f4; --ink-2: #ffffff; --line: #d5d9e2; --silver: #141826; --mute: #596075;
+  --signal: #b46c12; --signal-ink: #ffffff; --ok: #1f7a4d; --alert: #c23a2b;
+  --metal-a: #ffffff; --metal-b: #b9bdc8; --metal-c: #7a8090;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+section, header { scroll-margin-top: calc(60px + env(safe-area-inset-top, 0px)); }
+body { background: var(--ink); color: var(--silver); font: 400 17px/1.6 var(--body); }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+section { padding-block: 88px; border-top: 1px solid var(--line); }
+h1, h2, h3 { text-wrap: balance; margin: 0; font-weight: 400; }
+h2 { font: 400 clamp(36px, 5vw, 56px)/1.05 var(--display); letter-spacing: .01em; }
+h3 { font: 600 19px/1.3 var(--body); }
+p { margin: 0; }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+.lede { color: var(--mute); max-width: 62ch; font-size: 18px; }
+.head { display: grid; gap: 16px; margin-bottom: 44px; }
+.num { font-variant-numeric: tabular-nums; }
+button { font: inherit; cursor: pointer; }
+:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+/* Nav */
+nav.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: color-mix(in srgb, var(--ink) 86%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--ink); }
+nav.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 60px; }
+.mark { font: 400 26px/1 var(--display); letter-spacing: .08em; display: flex; align-items: center; gap: 10px; color: var(--silver); text-decoration: none; }
+.mark i { width: 7px; height: 7px; border-radius: 50%; background: var(--signal); display: inline-block; }
+nav.top ul { display: flex; gap: 26px; list-style: none; margin: 0; padding: 0; font-size: 14px; }
+nav.top a { color: var(--mute); text-decoration: none; }
+nav.top a:hover { color: var(--silver); }
+@media (max-width: 760px) { nav.top ul { display: none; } }
+
+/* Hero */
+.hero { padding-block: 72px 88px; border-top: 0; }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; }
+.hero h1 { font: 400 clamp(46px, 7.4vw, 96px)/.98 var(--display); letter-spacing: .005em; }
+.hero h1 em { font-style: normal; color: var(--signal); }
+.hero .copy { display: grid; gap: 26px; min-width: 0; }
+.hero .facts { display: flex; flex-wrap: wrap; gap: 10px 22px; font: 500 13px/1.4 var(--mono); color: var(--mute); }
+.hero .facts span::before { content: "— "; color: var(--signal); }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--silver); text-decoration: none; font-weight: 600; font-size: 15px; }
+.btn.primary { background: var(--signal); color: var(--signal-ink); border-color: var(--signal); }
+.btn:hover { border-color: var(--silver); }
+.btn.primary:hover { filter: brightness(1.06); }
+.stage { position: relative; aspect-ratio: 1 / 1; max-width: 100%; display: grid; place-items: center; }
+.stage svg { width: 100%; height: auto; overflow: visible; }
+.stage .hint { position: absolute; bottom: 4%; left: 0; right: 0; text-align: center; font: 500 12px/1.4 var(--mono); letter-spacing: .08em; color: var(--mute); }
+.dot-btn { cursor: pointer; }
+.pulse { transform-origin: center; transform-box: fill-box; animation: pulse 3.2s ease-out infinite; }
+@keyframes pulse { 0% { opacity: .9; transform: scale(1); } 70%,100% { opacity: 0; transform: scale(4.2); } }
+.buzz { animation: buzz .32s linear 3; transform-box: fill-box; transform-origin: center; }
+@keyframes buzz { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.5px, .5px); } 75% { transform: translate(1.5px, -.5px); } }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } .stage { max-width: 440px; margin: 0 auto; width: 100%; } }
+
+/* Problem */
+.problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.problem-grid > div { background: var(--ink); padding: 28px; display: grid; gap: 10px; align-content: start; }
+.problem-grid .big { font: 400 44px/1 var(--display); color: var(--signal); }
+.problem-grid p { color: var(--mute); }
+@media (max-width: 760px) { .problem-grid { grid-template-columns: 1fr; } }
+
+/* Simulator */
+.sim { display: grid; grid-template-columns: 1.25fr .9fr; gap: 28px; align-items: start; }
+.sim > * { min-width: 0; }
+.panel { background: var(--ink-2); border: 1px solid var(--line); border-radius: 18px; padding: 24px; }
+.clock-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.clock { font: 400 64px/1 var(--display); font-variant-numeric: tabular-nums; }
+.status { display: inline-flex; align-items: center; gap: 8px; font: 500 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line); }
+.status i { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+.status[data-s="awaiting"] i { background: var(--signal); animation: blink 1s steps(2) infinite; }
+.status[data-s="alert"] { border-color: var(--alert); color: var(--alert); }
+.status[data-s="alert"] i { background: var(--alert); }
+.status[data-s="ended"] i { background: var(--mute); }
+@keyframes blink { 50% { opacity: .2; } }
+.track { position: relative; height: 46px; margin: 24px 0 8px; }
+.track .rail { position: absolute; left: 0; right: 0; top: 22px; height: 2px; background: var(--line); }
+.track .fill { position: absolute; left: 0; top: 22px; height: 2px; background: var(--silver); transition: width .4s; }
+.track .tick { position: absolute; top: 16px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; border: 2px solid var(--line); background: var(--ink-2); }
+.track .tick.ok { background: var(--ok); border-color: var(--ok); }
+.track .tick.miss { background: var(--alert); border-color: var(--alert); }
+.track .tick.now { border-color: var(--signal); }
+.track-labels { display: flex; justify-content: space-between; font: 400 12px/1 var(--mono); color: var(--mute); }
+.countdown { height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: 18px; }
+.countdown b { display: block; height: 100%; width: 0; background: var(--signal); }
+.cd-label { font: 400 13px/1.4 var(--mono); color: var(--mute); margin-top: 8px; min-height: 1.4em; }
+.controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 22px; }
+.controls button { text-align: left; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--line); background: var(--ink); color: var(--silver); display: grid; gap: 2px; }
+.controls button small { color: var(--mute); font-size: 13px; }
+.controls button:hover:not(:disabled) { border-color: var(--silver); }
+.controls button:disabled { opacity: .4; cursor: not-allowed; }
+.controls button.tap { border-color: var(--signal); }
+.controls button.tap:not(:disabled) { background: color-mix(in srgb, var(--signal) 14%, var(--ink)); }
+.geo { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 16px; font-size: 14px; color: var(--mute); }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.seg button { border: 0; background: none; color: var(--mute); padding: 6px 12px; border-radius: 999px; font-size: 13px; }
+.seg button[aria-pressed="true"] { background: var(--silver); color: var(--ink); }
+.log { margin-top: 20px; border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; max-height: 170px; overflow-y: auto; font: 400 13px/1.45 var(--mono); color: var(--mute); }
+.log div b { color: var(--silver); font-weight: 500; }
+.log .a { color: var(--alert); }
+.log .g { color: var(--ok); }
+
+/* Phone */
+.phone { border: 1px solid var(--line); border-radius: 34px; padding: 14px; background: var(--ink); max-width: 340px; margin: 0 auto; width: 100%; }
+.phone .screen { border-radius: 24px; background: var(--ink-2); min-height: 430px; padding: 18px 16px; display: grid; align-content: start; gap: 12px; position: relative; overflow: hidden; }
+.phone .bar { display: flex; justify-content: space-between; font: 500 12px/1 var(--mono); color: var(--mute); }
+.phone .who { font-size: 13px; color: var(--mute); }
+.phone .idle { display: grid; gap: 10px; margin-top: 70px; text-align: center; color: var(--mute); font-size: 14px; }
+.phone .idle strong { font: 400 46px/1 var(--display); color: var(--silver); }
+.notif { border-radius: 16px; padding: 14px; background: var(--ink); border: 1px solid var(--alert); display: grid; gap: 6px; animation: drop .35s ease-out; }
+.notif.calm { border-color: var(--line); }
+.notif .t { font-weight: 700; font-size: 15px; }
+.notif .m { font-size: 13.5px; color: var(--mute); }
+.notif .tag { font: 500 11px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--alert); }
+.notif.calm .tag { color: var(--ok); }
+.map { height: 120px; border-radius: 12px; border: 1px solid var(--line); position: relative; overflow: hidden;
+  background:
+    linear-gradient(90deg, transparent 47%, var(--line) 47% 49%, transparent 49%),
+    linear-gradient(0deg, transparent 58%, var(--line) 58% 60%, transparent 60%),
+    linear-gradient(35deg, transparent 30%, var(--line) 30% 31.5%, transparent 31.5%),
+    var(--ink); }
+.map i { position: absolute; left: 47%; top: 52%; width: 14px; height: 14px; margin: -7px; border-radius: 50%; background: var(--alert); box-shadow: 0 0 0 6px color-mix(in srgb, var(--alert) 25%, transparent); }
+.phone-cap { text-align: center; font-size: 13px; color: var(--mute); margin-top: 14px; }
+@keyframes drop { from { transform: translateY(-14px); opacity: 0; } }
+@media (max-width: 860px) { .sim { grid-template-columns: 1fr; } }
+@media (max-width: 440px) { .controls { grid-template-columns: 1fr; } .clock { font-size: 52px; } }
+
+/* Features */
+.feat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px 32px; }
+.feat > div { display: grid; gap: 8px; align-content: start; padding-top: 18px; border-top: 1px solid var(--line); }
+.feat p { color: var(--mute); font-size: 15.5px; }
+.feat .k { font: 500 12px/1 var(--mono); color: var(--signal); letter-spacing: .08em; text-transform: uppercase; }
+.excl { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 14px; color: var(--mute); }
+.excl span { border: 1px dashed var(--line); padding: 6px 12px; border-radius: 999px; text-decoration: line-through; text-decoration-color: var(--mute); }
+@media (max-width: 860px) { .feat { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .feat { grid-template-columns: 1fr; } }
+
+/* Compare */
+.scen { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+.scen button { border: 1px solid var(--line); background: transparent; color: var(--mute); padding: 9px 14px; border-radius: 999px; font-size: 14px; }
+.scen button[aria-pressed="true"] { border-color: var(--signal); color: var(--silver); background: color-mix(in srgb, var(--signal) 12%, transparent); }
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; }
+table { width: 100%; border-collapse: collapse; min-width: 720px; font-size: 14.5px; }
+th, td { padding: 14px 16px; text-align: center; border-bottom: 1px solid var(--line); }
+th:first-child, td:first-child { text-align: left; }
+thead th { font: 500 11.5px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--mute); vertical-align: bottom; }
+thead th.req { color: var(--signal); }
+tbody tr:last-child td { border-bottom: 0; }
+tbody td:first-child { font-weight: 600; }
+tbody td:first-child small { display: block; font-weight: 400; color: var(--mute); font-size: 12.5px; }
+.y { color: var(--ok); } .n { color: var(--mute); opacity: .55; }
+tr.anchor td { background: color-mix(in srgb, var(--signal) 9%, transparent); }
+tr.fails td { opacity: .45; }
+td.verdict { font: 500 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+td.verdict.ok { color: var(--ok); } td.verdict.no { color: var(--alert); }
+
+/* Business */
+.biz { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.biz > * { min-width: 0; }
+.price-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 28px; }
+.pc { border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: grid; gap: 6px; }
+.pc .p { font: 400 46px/1 var(--display); }
+.pc .s { color: var(--mute); font-size: 14px; }
+.pc .m { font: 500 13px/1 var(--mono); color: var(--ok); }
+.slider { display: grid; gap: 8px; margin-bottom: 18px; }
+.slider label { display: flex; justify-content: space-between; font-size: 14px; color: var(--mute); }
+.slider label output { color: var(--silver); font: 500 14px/1 var(--mono); }
+input[type=range] { width: 100%; accent-color: var(--signal); }
+.kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-top: 8px; }
+.kpis div { background: var(--ink-2); padding: 16px; display: grid; gap: 4px; }
+.kpis span { font-size: 13px; color: var(--mute); }
+.kpis strong { font: 500 22px/1.1 var(--mono); font-variant-numeric: tabular-nums; }
+.note { font-size: 13px; color: var(--mute); margin-top: 12px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart text { fill: var(--mute); font: 400 12px var(--mono); }
+.chart .lbl { fill: var(--silver); font-weight: 500; }
+.legend { display: flex; gap: 18px; font-size: 13px; color: var(--mute); margin-top: 10px; flex-wrap: wrap; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+@media (max-width: 860px) { .biz { grid-template-columns: 1fr; } }
+@media (max-width: 440px) { .price-cards { grid-template-columns: 1fr; } }
+
+/* Ask */
+.stages { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.stage-card { border: 1px solid var(--line); border-radius: 18px; padding: 28px; display: grid; gap: 14px; align-content: start; }
+.stage-card.now { border-color: var(--signal); }
+.stage-card .amt { font: 400 clamp(38px, 5vw, 52px)/1 var(--display); }
+.stage-card ul { margin: 0; padding-left: 18px; color: var(--mute); display: grid; gap: 6px; font-size: 15.5px; }
+.stage-card .tag { font: 500 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+.stage-card.now .tag { color: var(--signal); }
+@media (max-width: 760px) { .stages { grid-template-columns: 1fr; } }
+
+.progress { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 44px; }
+.progress div { padding: 18px 16px 0 0; border-top: 2px solid var(--line); display: grid; gap: 6px; align-content: start; }
+.progress div.done { border-top-color: var(--signal); }
+.progress b { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.progress div.done b { color: var(--signal); }
+.progress p { font-size: 14.5px; color: var(--mute); }
+@media (max-width: 760px) { .progress { grid-template-columns: 1fr 1fr; gap: 20px 0; } }
+
+.risks { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 32px; margin-top: 8px; }
+.risks div { display: grid; gap: 4px; }
+.risks p { color: var(--mute); font-size: 15px; }
+@media (max-width: 760px) { .risks { grid-template-columns: 1fr; } }
+
+footer { border-top: 1px solid var(--line); padding-block: 48px 64px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; align-items: end; }
+footer .big { font: 400 clamp(34px, 5vw, 54px)/1.05 var(--display); max-width: 18ch; }
+footer p { color: var(--mute); font-size: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse, .buzz, .notif, .status i { animation: none !important; }
+}
+</style>
+
+<nav class="top" aria-label="Sections">
+  <div class="wrap">
+    <a class="mark" href="#top"><i></i>ANCHOR</a>
+    <ul>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#night">Try a night out</a></li>
+      <li><a href="#market">Why Anchor wins</a></li>
+      <li><a href="#numbers">Numbers</a></li>
+      <li><a href="#invest">Invest</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="copy">
+      <span class="eyebrow">Personal safety bracelet · Investor preview</span>
+      <h1>When she can't call for help, <em>Anchor</em> does.</h1>
+      <p class="lede">A brushed-silver bracelet with its own cellular and GPS. It asks for a quiet tap every 30 minutes. If she misses it, falls, or the clasp is opened away from home, her trusted circle gets her location right away. No phone needed and no button to press.</p>
+      <div class="facts">
+        <span>Works without a phone</span>
+        <span>Two-person shut-off</span>
+        <span>$189 prepaid, no monthly bill</span>
+      </div>
+      <div class="cta">
+        <a class="btn primary" href="#night">Try a night out</a>
+        <a class="btn" href="#invest">See the ask</a>
+      </div>
+    </div>
+    <div class="stage" id="stage">
+      <svg viewBox="0 0 400 400" role="img" aria-labelledby="brTitle">
+        <title id="brTitle">Anchor bracelet in brushed silver, with a single flush indicator dot</title>
+        <defs>
+          <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="var(--metal-a)"/>
+            <stop offset=".35" stop-color="var(--metal-b)"/>
+            <stop offset=".55" stop-color="var(--metal-a)"/>
+            <stop offset=".8" stop-color="var(--metal-c)"/>
+            <stop offset="1" stop-color="var(--metal-b)"/>
+          </linearGradient>
+          <linearGradient id="metalBack" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="var(--metal-c)"/>
+            <stop offset=".5" stop-color="var(--metal-b)"/>
+            <stop offset="1" stop-color="var(--metal-c)"/>
+          </linearGradient>
+          <radialGradient id="glow" cx=".5" cy=".5" r=".5">
+            <stop offset="0" stop-color="var(--signal)" stop-opacity=".22"/>
+            <stop offset="1" stop-color="var(--signal)" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="200" cy="200" r="190" fill="url(#glow)" opacity=".6"/>
+        <g id="bracelet">
+          <!-- back half of the band -->
+          <path d="M 70 210 A 130 62 0 0 1 330 210" fill="none" stroke="url(#metalBack)" stroke-width="20" stroke-linecap="round" opacity=".75"/>
+          <!-- front half of the band -->
+          <path d="M 70 210 A 130 62 0 0 0 330 210" fill="none" stroke="url(#metal)" stroke-width="26" stroke-linecap="round"/>
+          <path d="M 76 216 A 124 56 0 0 0 324 216" fill="none" stroke="var(--metal-a)" stroke-width="1.2" opacity=".7"/>
+          <!-- clasp -->
+          <rect x="314" y="196" width="26" height="26" rx="5" fill="url(#metal)" stroke="var(--metal-c)" stroke-width="1"/>
+          <line x1="327" y1="199" x2="327" y2="219" stroke="var(--metal-c)" stroke-width="1"/>
+          <!-- flush indicator dot -->
+          <g class="dot-btn" id="heroDot" tabindex="0" role="button" aria-label="Tap the dot to confirm a check-in">
+            <circle cx="200" cy="272" r="22" fill="transparent"/>
+            <circle class="pulse" cx="200" cy="272" r="5" fill="var(--signal)"/>
+            <circle cx="200" cy="272" r="5" fill="var(--signal)" stroke="var(--metal-c)" stroke-width="1"/>
+          </g>
+        </g>
+      </svg>
+      <div class="hint" id="heroHint">Tap the dot to confirm a check-in</div>
+    </div>
+  </div>
+</header>
+
+<section id="how">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">The problem</span>
+      <h2>Every safety product today assumes she can still act.</h2>
+      <p class="lede">Panic buttons and SOS apps need her to notice the danger, reach her phone and press something. When a drink is spiked or something happens fast, that moment never comes. By the time anything feels wrong, she can't call anyone.</p>
+    </div>
+    <div class="problem-grid">
+      <div><span class="big">0</span><h3>Seconds to react</h3><p>Spiking and sudden attacks are built around her not seeing it coming.</p></div>
+      <div><span class="big">1</span><h3>Phone, easily lost</h3><p>Nimb, Athena, ROAR and Wearsafe all need a phone nearby. Phones get taken, die or get left on a table.</p></div>
+      <div><span class="big">1</span><h3>Person can cancel it</h3><p>Most alerts can be switched off by one person, including someone standing over her.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="night">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Interactive demo</span>
+      <h2>Live through a night out with Anchor.</h2>
+      <p class="lede">Move the clock forward and the bracelet asks for a check-in. Tap to confirm, or let it lapse, simulate a fall, or open the clasp, and watch what her circle sees on their phone.</p>
+    </div>
+    <div class="sim">
+      <div class="panel">
+        <div class="clock-row">
+          <div class="clock num" id="clock">21:00</div>
+          <div class="status" id="status" data-s="safe"><i></i><span id="statusTxt">Armed · all good</span></div>
+        </div>
+        <div class="track" id="track" aria-hidden="true"><div class="rail"></div><div class="fill" id="fill"></div></div>
+        <div class="track-labels"><span>21:00</span><span>00:00</span><span>03:00</span></div>
+        <div class="countdown" aria-hidden="true"><b id="cdBar"></b></div>
+        <div class="cd-label" id="cdLabel" aria-live="polite"></div>
+        <div class="controls">
+          <button id="bAdvance"><span>Advance 30 min</span><small>Bracelet buzzes for a check-in</small></button>
+          <button id="bTap" class="tap" disabled><span>Tap the bracelet</span><small>One touch confirms she's okay</small></button>
+          <button id="bFall"><span>Simulate a fall</span><small>Impact, then no movement</small></button>
+          <button id="bClasp"><span>Open the clasp</span><small id="claspSub">Away from home: needs a buddy</small></button>
+          <button id="bBuddy"><span>Ask buddy to confirm</span><small>Second person approves shut-off</small></button>
+          <button id="bReset"><span>Start over</span><small>New night, 21:00</small></button>
+        </div>
+        <div class="geo">
+          <span>She is</span>
+          <div class="seg" role="group" aria-label="Location">
+            <button id="gAway" aria-pressed="true">out</button>
+            <button id="gHome" aria-pressed="false">home</button>
+          </div>
+          <span id="geoTxt">outside her home geofence</span>
+        </div>
+        <div class="log" id="log" aria-live="polite"></div>
+      </div>
+      <div>
+        <div class="phone" aria-live="polite">
+          <div class="screen" id="screen">
+            <div class="bar"><span id="pClock">21:00</span><span>Mum's phone</span></div>
+            <div class="idle" id="pIdle"><strong>Quiet</strong>No alerts. Her circle doesn't hear from Anchor unless something is wrong.</div>
+          </div>
+        </div>
+        <p class="phone-cap">Alerts break through Do Not Disturb, like a phone call.<br>No automatic call to emergency services: a person she trusts acts first.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Inside the bracelet</span>
+      <h2>Jewelry on the outside. A phone's worth of radio inside.</h2>
+      <p class="lede">No screen, no visible button, no logo. One flush dot. Everything that matters runs on the bracelet itself, so it keeps working when her phone is gone.</p>
+    </div>
+    <div class="feat">
+      <div><span class="k">Cellular + GPS</span><h3>Standalone connection</h3><p>A system-in-package keeps a live link so an alert can always go out. Bluetooth to the phone is a convenience only.</p></div>
+      <div><span class="k">Touch + LRA motor</span><h3>30-minute check-in</h3><p>A short, private pulse. One tap confirms. Two minutes without a reply sends her location to her circle.</p></div>
+      <div><span class="k">Accelerometer</span><h3>Fall detection</h3><p>A sudden impact followed by stillness triggers an alert on its own, between check-ins.</p></div>
+      <div><span class="k">Clasp sensor</span><h3>Removal alarm</h3><p>Opening the clasp at home is safe. Anywhere else, it alerts her circle with "Clasp opened, last location".</p></div>
+      <div><span class="k">Dual confirmation</span><h3>Two-person shut-off</h3><p>Ending the night away from home needs her and one person from her circle. One person under pressure can't switch it off.</p></div>
+      <div><span class="k">Backup capacitor</span><h3>A last signal</h3><p>If power is cut suddenly, the bracelet still sends a final location. Target battery: 18–24 hours of active use.</p></div>
+    </div>
+    <div class="excl"><b style="color:var(--silver);font-weight:600">Deliberately left out:</b><span>Camera</span><span>Audio recording</span><span>Heart-rate (v2)</span></div>
+  </div>
+</section>
+
+<section id="market">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Competitive landscape</span>
+      <h2>Others have spotted the need. None cover the moment that matters.</h2>
+      <p class="lede">Pick a situation. The table shows which products would still get help to her.</p>
+    </div>
+    <div class="scen" role="group" aria-label="Scenario">
+      <button data-s="drugged" aria-pressed="true">Her drink was spiked</button>
+      <button data-s="phone" aria-pressed="false">Her phone is taken</button>
+      <button data-s="removed" aria-pressed="false">Someone removes the device</button>
+      <button data-s="coerced" aria-pressed="false">She's pressured to switch it off</button>
+    </div>
+    <div class="tbl-wrap">
+      <table id="cmp">
+        <thead><tr>
+          <th>Product</th>
+          <th data-f="auto">Alerts without her acting</th>
+          <th data-f="nophone">Works without a phone</th>
+          <th data-f="tamper">Removal alarm</th>
+          <th data-f="dual">Two-person shut-off</th>
+          <th data-f="loc">Location to her circle</th>
+          <th>In this situation</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note">Comparison based on each product's published core function. Apple and Google watches offer fall detection and SOS, but they are general-purpose, phone-tied devices with single-person cancel.</p>
+  </div>
+</section>
+
+<section id="numbers">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Business model</span>
+      <h2>Prepaid bundles. Hardware margins near 60%.</h2>
+      <p class="lede">Customers pay once for the device and its cellular service. No subscription to cancel, cash up front, and a ~$32 bill of materials.</p>
+    </div>
+    <div class="biz">
+      <div>
+        <div class="price-cards">
+          <div class="pc"><span class="eyebrow">1-year bundle</span><span class="p num">$189</span><span class="s">Device + 12 months service</span><span class="m">Cost $74 · 61% margin</span></div>
+          <div class="pc"><span class="eyebrow">2-year bundle</span><span class="p num">$259</span><span class="s">Device + 24 months service</span><span class="m">Cost $110 · 58% margin</span></div>
+        </div>
+        <div class="panel">
+          <h3 style="margin-bottom:18px">Unit economics calculator</h3>
+          <div class="slider">
+            <label for="units">Bracelets sold <output id="unitsOut" class="num">12,000</output></label>
+            <input type="range" id="units" min="1000" max="50000" step="1000" value="12000">
+          </div>
+          <div class="slider">
+            <label for="mix">Share choosing 2-year bundle <output id="mixOut" class="num">70%</output></label>
+            <input type="range" id="mix" min="0" max="100" step="5" value="70">
+          </div>
+          <div class="kpis">
+            <div><span>Revenue</span><strong id="kRev" class="num">–</strong></div>
+            <div><span>Gross profit</span><strong id="kGp" class="num">–</strong></div>
+            <div><span>Blended price</span><strong id="kAvg" class="num">–</strong></div>
+            <div><span>Units to cover full build cost</span><strong id="kBe" class="num">–</strong></div>
+          </div>
+          <p class="note">At today's per-unit costs. Build cost is $165k–$290k for R&amp;D, tooling and certification.</p>
+        </div>
+      </div>
+      <div class="chart">
+        <h3 style="margin-bottom:6px">3-year projection</h3>
+        <p class="note" style="margin:0 0 14px">3,000 → 12,000 → 40,000 units</p>
+        <div id="chart"></div>
+        <div class="legend"><span><i style="background:var(--metal-b)"></i>Revenue</span><span><i style="background:var(--signal)"></i>Gross profit</span><span><i style="background:var(--ok)"></i>Net income</span></div>
+        <p class="note">Prepaid revenue shown on a cash basis for planning. A formal close would defer it over the coverage period.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="invest">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">The ask</span>
+      <h2>A staged raise that buys evidence before hardware.</h2>
+      <p class="lede">Instead of asking for the full build cost up front, we raise in two steps. Stage 2 only happens if Stage 1 proves real demand and a workable hardware plan.</p>
+    </div>
+    <div class="stages">
+      <div class="stage-card now">
+        <span class="tag">Stage 1 · raising now</span>
+        <span class="amt num">$15k–25k</span>
+        <h3>Validation</h3>
+        <ul>
+          <li>Discovery workshop and feasibility study with a hardware engineering partner</li>
+          <li>User interviews with women aged 18–28</li>
+          <li>Clickable app prototype: arming a night, picking a buddy, receiving an alert</li>
+          <li>Patent consultation on the two-person shut-off</li>
+          <li>Non-binding manufacturing quotes</li>
+        </ul>
+      </div>
+      <div class="stage-card">
+        <span class="tag">Stage 2 · after evidence</span>
+        <span class="amt num">$165k–290k</span>
+        <h3>Build</h3>
+        <ul>
+          <li>Visual prototype for look, size and feel</li>
+          <li>Functional prototype collecting real data on location, battery, falls and alerts</li>
+          <li>Hardware R&amp;D, tooling and certification</li>
+          <li>First production run in brushed silver</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="progress">
+      <div class="done"><b>Done</b><p>Product spec and investor overview written</p></div>
+      <div class="done"><b>Done</b><p>Validation survey live with target users</p></div>
+      <div class="done"><b>Done</b><p>Engineering partner proposal received for workshop and feasibility study</p></div>
+      <div><b>Next</b><p>Discovery workshop, patent check, final brand name</p></div>
+    </div>
+
+    <div class="head" style="margin-top:72px;margin-bottom:24px">
+      <span class="eyebrow">Risks we plan for</span>
+    </div>
+    <div class="risks">
+      <div><h3>Hardware is slow and costly</h3><p>The staged raise keeps the first commitment small until a functional prototype proves the battery and signal targets.</p></div>
+      <div><h3>Signal in basements and clubs</h3><p>A core question for the feasibility study. The backup capacitor and last-known location cover short dropouts.</p></div>
+      <div><h3>Big tech adds a similar feature</h3><p>Watches are general gadgets. Anchor is jewelry built for one job, and the two-person shut-off may be patentable.</p></div>
+      <div><h3>Wearing it every night out</h3><p>Our survey tests whether the check-in feels reassuring or annoying, and whether $189 feels fair. The interval adapts to what users tell us.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="big">Help us build the bracelet that acts when she can't.</p>
+    <div style="display:grid;gap:6px">
+      <p><b style="color:var(--silver)">Sophie Grimalda</b>, Founder</p>
+      <p>Anchor (working name) · 2026</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => n.toLocaleString("en-US");
+  const money = (n) => (n < 0 ? "−$" : "$") + (Math.abs(n) >= 1e6 ? (Math.abs(n) / 1e6).toFixed(2) + "M" : Math.round(Math.abs(n) / 1000) + "k");
+
+  /* ---------- Hero dot ---------- */
+  const heroDot = $("heroDot"), heroHint = $("heroHint"), bracelet = $("bracelet");
+  function heroTap() {
+    bracelet.classList.remove("buzz"); void bracelet.getBBox(); bracelet.classList.add("buzz");
+    heroHint.textContent = "Check-in confirmed · next one in 30 min";
+    setTimeout(() => { heroHint.textContent = "Tap the dot to confirm a check-in"; }, 2600);
+  }
+  heroDot.addEventListener("click", heroTap);
+  heroDot.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); heroTap(); } });
+
+  /* ---------- Night simulator ---------- */
+  const START = 21 * 60, END = 27 * 60, STEP = 30, WAIT_MS = 7000; // 7s on screen stands for the 2-minute window
+  let S;
+  const track = $("track");
+  const ticks = [];
+  for (let m = START + STEP; m <= END; m += STEP) {
+    const t = document.createElement("div");
+    t.className = "tick"; t.style.left = ((m - START) / (END - START) * 100) + "%";
+    track.appendChild(t); ticks.push(t);
+  }
+  const hhmm = (m) => String(Math.floor(m / 60) % 24).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+
+  function log(msg, cls) {
+    const d = document.createElement("div");
+    if (cls) d.className = cls;
+    d.innerHTML = "<b>" + hhmm(S.t) + "</b>  " + msg;
+    $("log").prepend(d);
+  }
+  function setStatus(s, txt) { $("status").dataset.s = s; $("statusTxt").textContent = txt; }
+  function phone(kind, title, msg, tag) {
+    $("pIdle").hidden = true;
+    const n = document.createElement("div");
+    n.className = "notif" + (kind === "calm" ? " calm" : "");
+    n.innerHTML = '<span class="tag">' + tag + '</span><span class="t">' + title + '</span><span class="m">' + msg + '</span>' +
+      (kind === "calm" ? "" : '<div class="map"><i></i></div><span class="m">Last location 2 min ago · Stortorget, Malmö</span>');
+    const sc = $("screen");
+    sc.insertBefore(n, sc.children[1]);
+    while (sc.querySelectorAll(".notif").length > 2) sc.querySelectorAll(".notif")[2].remove();
+  }
+  function stopCountdown() { clearInterval(S.timer); S.timer = null; $("cdBar").style.width = "0"; $("cdLabel").textContent = ""; }
+  function render() {
+    $("clock").textContent = hhmm(S.t); $("pClock").textContent = hhmm(S.t);
+    $("fill").style.width = ((S.t - START) / (END - START) * 100) + "%";
+    ticks.forEach((t, i) => {
+      const m = START + STEP * (i + 1);
+      t.className = "tick" + (S.marks[m] ? " " + S.marks[m] : "") + (S.awaiting && m === S.t ? " now" : "");
+    });
+    const over = S.state === "ended" || S.state === "alert";
+    $("bAdvance").disabled = over || S.awaiting || S.t >= END;
+    $("bTap").disabled = !S.awaiting;
+    $("bFall").disabled = over;
+    $("bClasp").disabled = over;
+    $("bBuddy").disabled = over || S.buddy || S.home;
+    $("claspSub").textContent = S.home ? "At home: opens safely" : (S.buddy ? "Buddy approved: opens safely" : "Away from home: needs a buddy");
+    $("gHome").setAttribute("aria-pressed", S.home); $("gAway").setAttribute("aria-pressed", !S.home);
+    $("geoTxt").textContent = S.home ? "inside her home geofence" : "outside her home geofence";
+  }
+  function alertFire(title, msg) {
+    stopCountdown(); S.awaiting = false; S.state = "alert";
+    setStatus("alert", "Alert sent to circle");
+    phone("alert", title, msg, "Anchor alert · breaks through Do Not Disturb");
+    render();
+  }
+  function reset() {
+    if (S && S.timer) clearInterval(S.timer);
+    S = { t: START, state: "safe", awaiting: false, buddy: false, home: false, marks: {}, timer: null };
+    $("log").innerHTML = ""; $("screen").querySelectorAll(".notif").forEach((n) => n.remove()); $("pIdle").hidden = false;
+    setStatus("safe", "Armed · all good"); stopCountdown();
+    log("Night armed in the app. Home base set, clasp unlocked, circle: Mum, Lina.");
+    render();
+  }
+  $("bAdvance").onclick = () => {
+    S.t += STEP; S.awaiting = true;
+    setStatus("awaiting", "Check-in requested");
+    log("Bracelet pulses. Waiting for a tap.");
+    bracelet.classList.remove("buzz"); void bracelet.getBBox(); bracelet.classList.add("buzz");
+    const t0 = Date.now();
+    S.timer = setInterval(() => {
+      const p = Math.min(1, (Date.now() - t0) / WAIT_MS);
+      $("cdBar").style.width = (p * 100) + "%";
+      const secs = Math.ceil(120 * (1 - p));
+      $("cdLabel").textContent = "Reply window: " + Math.floor(secs / 60) + ":" + String(secs % 60).padStart(2, "0") + " left (sped up)";
+      if (p >= 1) {
+        S.marks[S.t] = "miss";
+        log("No reply in 2 minutes. Alert sent with location.", "a");
+        alertFire("Missed check-in", "Sophie didn't confirm her " + hhmm(S.t) + " check-in. Try calling her now.");
+      }
+    }, 100);
+    render();
+  };
+  $("bTap").onclick = () => {
+    stopCountdown(); S.awaiting = false; S.marks[S.t] = "ok";
+    setStatus("safe", "Checked in · all good");
+    log("Tap received. Next check-in in 30 minutes.", "g");
+    render();
+  };
+  $("bFall").onclick = () => {
+    if (S.awaiting) S.marks[S.t] = "miss";
+    log("Impact detected, then no movement for 60 s.", "a");
+    alertFire("Fall detected", "Sophie's bracelet registered a hard impact and no movement afterwards.");
+  };
+  $("bClasp").onclick = () => {
+    if (S.home || S.buddy) {
+      stopCountdown(); S.awaiting = false; S.state = "ended";
+      setStatus("ended", "Night ended safely");
+      log(S.home ? "Clasp opened inside home geofence. Monitoring ends." : "Clasp opened with her + buddy confirmation. Monitoring ends.", "g");
+      phone("calm", "Sophie is done for the night", S.home ? "She's home. Monitoring has ended." : "She and Lina both confirmed. Monitoring has ended.", "All clear");
+      render();
+    } else {
+      log("Clasp opened away from home with no second confirmation.", "a");
+      alertFire("Clasp opened", "Sophie's bracelet was opened away from home without a buddy confirming.");
+    }
+  };
+  $("bBuddy").onclick = () => { S.buddy = true; log("Lina confirmed from her phone. Shut-off now allowed.", "g"); render(); };
+  $("gHome").onclick = () => { if (S.state !== "safe") return; S.home = true; log("Arrived inside home geofence."); render(); };
+  $("gAway").onclick = () => { if (S.state !== "safe") return; S.home = false; render(); };
+  $("bReset").onclick = reset;
+  reset();
+
+  /* ---------- Comparison ---------- */
+  const products = [
+    { n: "Anchor", d: "Standalone bracelet", f: { auto: 1, nophone: 1, tamper: 1, dual: 1, loc: 1 }, me: 1 },
+    { n: "Nimb", d: "Panic-button ring", f: { auto: 0, nophone: 0, tamper: 0, dual: 0, loc: 1 } },
+    { n: "Athena / ROAR", d: "Panic button + alarm", f: { auto: 0, nophone: 0, tamper: 0, dual: 0, loc: 1 } },
+    { n: "Wearsafe", d: "Panic button + audio", f: { auto: 0, nophone: 0, tamper: 0, dual: 0, loc: 1 } },
+    { n: "Elora Armor", d: "Drink-spike test via app", f: { auto: 0, nophone: 0, tamper: 0, dual: 0, loc: 0 } },
+    { n: "Test coasters / nail polish", d: "Drug detection only", f: { auto: 0, nophone: 0, tamper: 0, dual: 0, loc: 0 } },
+  ];
+  const scen = {
+    drugged: ["auto", "loc"],
+    phone: ["nophone", "loc"],
+    removed: ["tamper", "loc"],
+    coerced: ["dual", "loc"],
+  };
+  const keys = ["auto", "nophone", "tamper", "dual", "loc"];
+  function renderTable(s) {
+    const req = scen[s];
+    document.querySelectorAll("#cmp thead th[data-f]").forEach((th) => th.classList.toggle("req", req.includes(th.dataset.f)));
+    $("cmp").tBodies[0].innerHTML = products.map((p) => {
+      const ok = req.every((k) => p.f[k]);
+      return '<tr class="' + (p.me ? "anchor " : "") + (ok ? "" : "fails") + '"><td>' + p.n + "<small>" + p.d + "</small></td>" +
+        keys.map((k) => '<td class="' + (p.f[k] ? "y" : "n") + '" aria-label="' + (p.f[k] ? "yes" : "no") + '">' + (p.f[k] ? "●" : "—") + "</td>").join("") +
+        '<td class="verdict ' + (ok ? "ok" : "no") + '">' + (ok ? "Help is sent" : "No help") + "</td></tr>";
+    }).join("");
+  }
+  document.querySelectorAll(".scen button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".scen button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+    renderTable(b.dataset.s);
+  }));
+  renderTable("drugged");
+
+  /* ---------- Calculator ---------- */
+  function calc() {
+    const u = +$("units").value, mix = +$("mix").value / 100;
+    const avg = 189 * (1 - mix) + 259 * mix;
+    const gpu = (189 - 74) * (1 - mix) + (259 - 110) * mix;
+    $("unitsOut").textContent = fmt(u); $("mixOut").textContent = Math.round(mix * 100) + "%";
+    $("kRev").textContent = money(u * avg);
+    $("kGp").textContent = money(u * gpu);
+    $("kAvg").textContent = "$" + Math.round(avg);
+    $("kBe").textContent = fmt(Math.ceil(165000 / gpu / 10) * 10) + "–" + fmt(Math.ceil(290000 / gpu / 10) * 10);
+  }
+  $("units").addEventListener("input", calc); $("mix").addEventListener("input", calc); calc();
+
+  /* ---------- Projection chart ---------- */
+  const yrs = [
+    { y: "Year 1", rev: 714000, gp: 417000, ni: -183000 },
+    { y: "Year 2", rev: 2856000, gp: 1669000, ni: 769000 },
+    { y: "Year 3", rev: 9520000, gp: 5990000, ni: 3590000 },
+  ];
+  const W = 520, H = 340, L = 54, R = 10, T = 24, B = 36;
+  const max = 10e6, min = -1e6;
+  const y = (v) => T + (max - v) / (max - min) * (H - T - B);
+  const gw = (W - L - R) / 3, bw = Math.min(34, gw / 4.2);
+  let svg = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Revenue, gross profit and net income for years 1 to 3">';
+  [0, 2e6, 4e6, 6e6, 8e6, 10e6].forEach((v) => {
+    svg += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="var(--line)" stroke-width="' + (v === 0 ? 1.4 : 1) + '"/>';
+    svg += '<text x="' + (L - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + (v === 0 ? "$0" : "$" + v / 1e6 + "M") + "</text>";
+  });
+  yrs.forEach((d, i) => {
+    const cx = L + gw * i + gw / 2;
+    const bars = [[d.rev, "var(--metal-b)"], [d.gp, "var(--signal)"], [d.ni, "var(--ok)"]];
+    bars.forEach(([v, c], j) => {
+      const x = cx + (j - 1.5) * (bw + 4);
+      const top = Math.min(y(v), y(0)), h = Math.abs(y(v) - y(0));
+      svg += '<rect x="' + x + '" y="' + top + '" width="' + bw + '" height="' + Math.max(h, 1) + '" rx="2" fill="' + c + '"><title>' + d.y + ": " + money(v) + "</title></rect>";
+    });
+    svg += '<text class="lbl" x="' + (cx - 1.5 * (bw + 4) + bw / 2) + '" y="' + (y(d.rev) - 7) + '" text-anchor="middle">' + money(d.rev) + "</text>";
+    svg += '<text x="' + cx + '" y="' + (H - 10) + '" text-anchor="middle">' + d.y + "</text>";
+  });
+  svg += '<text x="' + (L + gw / 2 + 0.5 * (bw + 4) + bw / 2) + '" y="' + (y(-183000) + 16) + '" text-anchor="middle">−$183k</text>';
+  svg += "</svg>";
+  $("chart").innerHTML = svg;
+})();
+</script>
