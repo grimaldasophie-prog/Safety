@@ -79,13 +79,16 @@ nav.top a:hover { color: var(--silver); }
 .btn.primary { background: var(--signal); color: var(--signal-ink); border-color: var(--signal); }
 .btn:hover { border-color: var(--silver); }
 .btn.primary:hover { filter: brightness(1.06); }
-.stage { position: relative; aspect-ratio: 1 / 1; max-width: 100%; display: grid; place-items: center; }
-.stage svg { width: 100%; height: auto; overflow: visible; }
-.stage .hint { position: absolute; bottom: 4%; left: 0; right: 0; text-align: center; font: 500 12px/1.4 var(--mono); letter-spacing: .08em; color: var(--mute); }
-.dot-btn { cursor: pointer; }
-.pulse { transform-origin: center; transform-box: fill-box; animation: pulse 3.2s ease-out infinite; }
-@keyframes pulse { 0% { opacity: .9; transform: scale(1); } 70%,100% { opacity: 0; transform: scale(4.2); } }
-.buzz { animation: buzz .32s linear 3; transform-box: fill-box; transform-origin: center; }
+.stage { position: relative; max-width: 100%; display: grid; gap: 12px; }
+.photo { position: relative; border-radius: 22px; overflow: hidden; aspect-ratio: 1310 / 1200; max-width: 100%; background: var(--ink-2); }
+.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hotspot { position: absolute; left: 49.6%; top: 45%; width: 76px; height: 76px; margin: -38px 0 0 -38px; border-radius: 50%; border: 0; background: transparent; padding: 0; }
+.hotspot::before, .hotspot::after { content: ""; position: absolute; inset: 26px; border-radius: 50%; border: 2px solid #f2b45a; }
+.hotspot::after { animation: pulse 2.6s ease-out infinite; }
+.hotspot.done::before { background: #7fcfa4; border-color: #7fcfa4; }
+.stage .hint { text-align: center; font: 500 12px/1.4 var(--mono); letter-spacing: .08em; color: var(--mute); }
+@keyframes pulse { 0% { opacity: .95; transform: scale(1); } 70%,100% { opacity: 0; transform: scale(2.6); } }
+.buzz { animation: buzz .32s linear 3; }
 @keyframes buzz { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-1.5px, .5px); } 75% { transform: translate(1.5px, -.5px); } }
 @media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; } .stage { max-width: 440px; margin: 0 auto; width: 100%; } }
 
@@ -171,6 +174,20 @@ nav.top a:hover { color: var(--silver); }
 @media (max-width: 860px) { .feat { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 520px) { .feat { grid-template-columns: 1fr; } }
 
+/* Finishes */
+.fin { display: grid; grid-template-columns: 1.1fr 1fr; gap: 36px; align-items: start; }
+.fin > * { min-width: 0; }
+.fin-view img { aspect-ratio: 652 / 620; object-fit: cover; transition: opacity .25s; }
+.fin-side { display: grid; gap: 16px; align-content: start; }
+.fin-name { font: 400 40px/1.05 var(--display); }
+.swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.swatches button { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: var(--mute); font-size: 14px; text-align: left; }
+.swatches button[aria-pressed="true"] { border-color: var(--signal); color: var(--silver); }
+.swatches i { flex: none; width: 28px; height: 16px; border-radius: 8px; background: var(--m); position: relative; box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); }
+.swatches i::after { content: ""; position: absolute; left: 8px; right: 8px; top: 4px; bottom: 4px; border-radius: 3px; background: var(--s); }
+.lineup { width: 100%; border-radius: 12px; display: block; }
+@media (max-width: 860px) { .fin { grid-template-columns: 1fr; } }
+
 /* Compare */
 .scen { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
 .scen button { border: 1px solid var(--line); background: transparent; color: var(--mute); padding: 9px 14px; border-radius: 999px; font-size: 14px; }
@@ -254,6 +271,7 @@ footer p { color: var(--mute); font-size: 14px; }
     <ul>
       <li><a href="#how">How it works</a></li>
       <li><a href="#night">Try a night out</a></li>
+      <li><a href="#finishes">Design</a></li>
       <li><a href="#market">Why Anchor wins</a></li>
       <li><a href="#numbers">Numbers</a></li>
       <li><a href="#invest">Invest</a></li>
@@ -266,7 +284,7 @@ footer p { color: var(--mute); font-size: 14px; }
     <div class="copy">
       <span class="eyebrow">Personal safety bracelet · Investor preview</span>
       <h1>When she can't call for help, <em>Anchor</em> does.</h1>
-      <p class="lede">A brushed-silver bracelet with its own cellular and GPS. It asks for a quiet tap every 30 minutes. If she misses it, falls, or the clasp is opened away from home, her trusted circle gets her location right away. No phone needed and no button to press.</p>
+      <p class="lede">A hinged bangle with its own cellular and GPS. Every 30 minutes it asks for a quiet tap on its inlay. If she misses it, falls, or the clasp is opened away from home, her trusted circle gets her location right away. No phone needed and no button to press.</p>
       <div class="facts">
         <span>Works without a phone</span>
         <span>Two-person shut-off</span>
@@ -278,45 +296,11 @@ footer p { color: var(--mute); font-size: 14px; }
       </div>
     </div>
     <div class="stage" id="stage">
-      <svg viewBox="0 0 400 400" role="img" aria-labelledby="brTitle">
-        <title id="brTitle">Anchor bracelet in brushed silver, with a single flush indicator dot</title>
-        <defs>
-          <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="var(--metal-a)"/>
-            <stop offset=".35" stop-color="var(--metal-b)"/>
-            <stop offset=".55" stop-color="var(--metal-a)"/>
-            <stop offset=".8" stop-color="var(--metal-c)"/>
-            <stop offset="1" stop-color="var(--metal-b)"/>
-          </linearGradient>
-          <linearGradient id="metalBack" x1="1" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="var(--metal-c)"/>
-            <stop offset=".5" stop-color="var(--metal-b)"/>
-            <stop offset="1" stop-color="var(--metal-c)"/>
-          </linearGradient>
-          <radialGradient id="glow" cx=".5" cy=".5" r=".5">
-            <stop offset="0" stop-color="var(--signal)" stop-opacity=".22"/>
-            <stop offset="1" stop-color="var(--signal)" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <circle cx="200" cy="200" r="190" fill="url(#glow)" opacity=".6"/>
-        <g id="bracelet">
-          <!-- back half of the band -->
-          <path d="M 70 210 A 130 62 0 0 1 330 210" fill="none" stroke="url(#metalBack)" stroke-width="20" stroke-linecap="round" opacity=".75"/>
-          <!-- front half of the band -->
-          <path d="M 70 210 A 130 62 0 0 0 330 210" fill="none" stroke="url(#metal)" stroke-width="26" stroke-linecap="round"/>
-          <path d="M 76 216 A 124 56 0 0 0 324 216" fill="none" stroke="var(--metal-a)" stroke-width="1.2" opacity=".7"/>
-          <!-- clasp -->
-          <rect x="314" y="196" width="26" height="26" rx="5" fill="url(#metal)" stroke="var(--metal-c)" stroke-width="1"/>
-          <line x1="327" y1="199" x2="327" y2="219" stroke="var(--metal-c)" stroke-width="1"/>
-          <!-- flush indicator dot -->
-          <g class="dot-btn" id="heroDot" tabindex="0" role="button" aria-label="Tap the dot to confirm a check-in">
-            <circle cx="200" cy="272" r="22" fill="transparent"/>
-            <circle class="pulse" cx="200" cy="272" r="5" fill="var(--signal)"/>
-            <circle cx="200" cy="272" r="5" fill="var(--signal)" stroke="var(--metal-c)" stroke-width="1"/>
-          </g>
-        </g>
-      </svg>
-      <div class="hint" id="heroHint">Tap the dot to confirm a check-in</div>
+      <div class="photo" id="bracelet">
+        <img src="assets/hero.jpg" alt="Anchor bangle in polished gold with a white mother-of-pearl inlay, worn on the wrist" width="1310" height="1200">
+        <button class="hotspot" id="heroDot" aria-label="Tap the inlay to confirm a check-in"></button>
+      </div>
+      <div class="hint" id="heroHint">Tap the inlay to confirm a check-in</div>
     </div>
   </div>
 </header>
@@ -389,17 +373,46 @@ footer p { color: var(--mute); font-size: 14px; }
     <div class="head">
       <span class="eyebrow">Inside the bracelet</span>
       <h2>Jewelry on the outside. A phone's worth of radio inside.</h2>
-      <p class="lede">No screen, no visible button, no logo. One flush dot. Everything that matters runs on the bracelet itself, so it keeps working when her phone is gone.</p>
+      <p class="lede">No screen, no visible button, no logo. The inlay panel is the only touch surface. Everything that matters runs on the bracelet itself, so it keeps working when her phone is gone.</p>
     </div>
     <div class="feat">
       <div><span class="k">Cellular + GPS</span><h3>Standalone connection</h3><p>A system-in-package keeps a live link so an alert can always go out. Bluetooth to the phone is a convenience only.</p></div>
-      <div><span class="k">Touch + LRA motor</span><h3>30-minute check-in</h3><p>A short, private pulse. One tap confirms. Two minutes without a reply sends her location to her circle.</p></div>
+      <div><span class="k">Touch + LRA motor</span><h3>30-minute check-in</h3><p>A short, private pulse. One tap on the inlay confirms. Two minutes without a reply sends her location to her circle.</p></div>
       <div><span class="k">Accelerometer</span><h3>Fall detection</h3><p>A sudden impact followed by stillness triggers an alert on its own, between check-ins.</p></div>
       <div><span class="k">Clasp sensor</span><h3>Removal alarm</h3><p>Opening the clasp at home is safe. Anywhere else, it alerts her circle with "Clasp opened, last location".</p></div>
       <div><span class="k">Dual confirmation</span><h3>Two-person shut-off</h3><p>Ending the night away from home needs her and one person from her circle. One person under pressure can't switch it off.</p></div>
       <div><span class="k">Backup capacitor</span><h3>A last signal</h3><p>If power is cut suddenly, the bracelet still sends a final location. Target battery: 18–24 hours of active use.</p></div>
     </div>
     <div class="excl"><b style="color:var(--silver);font-weight:600">Deliberately left out:</b><span>Camera</span><span>Audio recording</span><span>Heart-rate (v2)</span></div>
+  </div>
+</section>
+
+<section id="finishes">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Design</span>
+      <h2>Something she'd wear anyway.</h2>
+      <p class="lede">A safety device only works if she actually wears it, so Anchor looks like real jewelry and not like a gadget. It's a polished hinged bangle with an inlay panel. She taps the inlay to check in, and the removal sensor sits in the clasp.</p>
+    </div>
+    <div class="fin">
+      <div class="fin-view photo" style="aspect-ratio:auto">
+        <img id="finImg" src="assets/gold-white.jpg" alt="Anchor in Gold with White inlay, worn on the wrist">
+      </div>
+      <div class="fin-side">
+        <span class="eyebrow">Finish</span>
+        <div class="fin-name" id="finName">Gold · White</div>
+        <div class="swatches" role="group" aria-label="Choose a finish">
+          <button data-f="gold-white" data-n="Gold · White" aria-pressed="true"><i style="--m:#d9b45a;--s:#f3efe8"></i>Gold White</button>
+          <button data-f="silver-white" data-n="Silver · White" aria-pressed="false"><i style="--m:#c9ccd3;--s:#f3efe8"></i>Silver White</button>
+          <button data-f="gold-black" data-n="Gold · Black" aria-pressed="false"><i style="--m:#d9b45a;--s:#15161a"></i>Gold Black</button>
+          <button data-f="gold-pink" data-n="Gold · Pink" aria-pressed="false"><i style="--m:#d9b45a;--s:#efc9c4"></i>Gold Pink</button>
+          <button data-f="gold-green" data-n="Gold · Green" aria-pressed="false"><i style="--m:#d9b45a;--s:#1f5a3f"></i>Gold Green</button>
+          <button data-f="rose-white" data-n="Rose Gold · White" aria-pressed="false"><i style="--m:#d9a08c;--s:#f3efe8"></i>Rose Gold White</button>
+        </div>
+        <p class="note">Six launch finishes in three metals, with a choice of inlay. Every variant has the same electronics inside, so offering more finishes adds style options without adding engineering work.</p>
+        <img class="lineup" src="assets/lineup.jpg" alt="All six Anchor finishes side by side">
+      </div>
+    </div>
   </div>
 </section>
 
@@ -505,7 +518,7 @@ footer p { color: var(--mute); font-size: 14px; }
           <li>Visual prototype for look, size and feel</li>
           <li>Functional prototype collecting real data on location, battery, falls and alerts</li>
           <li>Hardware R&amp;D, tooling and certification</li>
-          <li>First production run in brushed silver</li>
+          <li>First production run, starting with the core finishes</li>
         </ul>
       </div>
     </div>
@@ -547,13 +560,13 @@ footer p { color: var(--mute); font-size: 14px; }
 
   /* ---------- Hero dot ---------- */
   const heroDot = $("heroDot"), heroHint = $("heroHint"), bracelet = $("bracelet");
+  function buzz() { bracelet.classList.remove("buzz"); void bracelet.offsetWidth; bracelet.classList.add("buzz"); }
   function heroTap() {
-    bracelet.classList.remove("buzz"); void bracelet.getBBox(); bracelet.classList.add("buzz");
+    buzz(); heroDot.classList.add("done");
     heroHint.textContent = "Check-in confirmed · next one in 30 min";
-    setTimeout(() => { heroHint.textContent = "Tap the dot to confirm a check-in"; }, 2600);
+    setTimeout(() => { heroHint.textContent = "Tap the inlay to confirm a check-in"; heroDot.classList.remove("done"); }, 2600);
   }
   heroDot.addEventListener("click", heroTap);
-  heroDot.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); heroTap(); } });
 
   /* ---------- Night simulator ---------- */
   const START = 21 * 60, END = 27 * 60, STEP = 30, WAIT_MS = 7000; // 7s on screen stands for the 2-minute window
@@ -620,7 +633,7 @@ footer p { color: var(--mute); font-size: 14px; }
     S.t += STEP; S.awaiting = true;
     setStatus("awaiting", "Check-in requested");
     log("Bracelet pulses. Waiting for a tap.");
-    bracelet.classList.remove("buzz"); void bracelet.getBBox(); bracelet.classList.add("buzz");
+    buzz();
     const t0 = Date.now();
     S.timer = setInterval(() => {
       const p = Math.min(1, (Date.now() - t0) / WAIT_MS);
@@ -663,6 +676,19 @@ footer p { color: var(--mute); font-size: 14px; }
   $("gAway").onclick = () => { if (S.state !== "safe") return; S.home = false; render(); };
   $("bReset").onclick = reset;
   reset();
+
+  /* ---------- Finishes ---------- */
+  document.querySelectorAll(".swatches button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".swatches button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+    const img = $("finImg");
+    img.style.opacity = 0;
+    setTimeout(() => {
+      img.src = "assets/" + b.dataset.f + ".jpg";
+      img.alt = "Anchor in " + b.dataset.n.replace(" · ", " with ") + " inlay, worn on the wrist";
+      img.style.opacity = 1;
+    }, 180);
+    $("finName").textContent = b.dataset.n;
+  }));
 
   /* ---------- Comparison ---------- */
   const products = [
